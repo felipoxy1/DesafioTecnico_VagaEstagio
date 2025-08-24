@@ -1,0 +1,27 @@
+# Visual Studio 2022
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio 2019
+.vs/
+
+# Rider
+.idea/
+
+# Build artifacts
+[Dd]ebug/
+[Rr]elease/
+[bB]in/
+[oO]bj/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.assets.json
+project.nuget.dgspec.json
+.vs/
+.vs/MyMachineAPI/
