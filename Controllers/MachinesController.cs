@@ -8,15 +8,31 @@ namespace MyMachineAPI.Controllers
     [Route("api/[controller]")]
     public class MachinesController : ControllerBase
     {
+
         [HttpGet]
         public ActionResult<IEnumerable<Machine>> GetMachines([FromQuery] string? status)
         {
             var machines = MachineRepository.GetAll();
+
             if (!string.IsNullOrEmpty(status))
             {
                 machines = machines.Where(m => m.Status != null && m.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
             }
+
             return Ok(machines);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Machine> GetMachineById(Guid id)
+        {
+            var machine = MachineRepository.GetById(id);
+
+            if (machine == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(machine);
         }
 
         [HttpPost]
@@ -24,10 +40,12 @@ namespace MyMachineAPI.Controllers
         {
             if (string.IsNullOrEmpty(machine.Name))
             {
-                return BadRequest("O nome da maquina e obrigatorio.");
+                return BadRequest("O nome da máquina é obrigatório.");
             }
+
             MachineRepository.Add(machine);
-            return CreatedAtAction(nameof(GetMachines), new { id = machine.Id }, machine);
+
+            return CreatedAtAction(nameof(GetMachineById), new { id = machine.Id }, machine);
         }
 
         [HttpPut("{id}")]
@@ -35,14 +53,17 @@ namespace MyMachineAPI.Controllers
         {
             if (id != machine.Id)
             {
-                return BadRequest("O ID da maquina nao corresponde.");
+                return BadRequest("O ID na URL não corresponde ao ID no corpo da requisição.");
             }
+
             var existingMachine = MachineRepository.GetById(id);
             if (existingMachine == null)
             {
                 return NotFound();
             }
+
             MachineRepository.Update(machine);
+
             return NoContent();
         }
     }
